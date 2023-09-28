@@ -1,0 +1,226 @@
+﻿@page "/addDawas"
+@using Microsoft.EntityFrameworkCore;
+@using MinistryOfWarerResources.BackEnd.Interfaces;
+@using MinistryOfWarerResources.Data;
+@using MinistryOfWarerResources.Models;
+@inject IJSRuntime _js
+@inject IWebHostEnvironment _env
+@inject ApplicationDbContext _db
+@inject IDawa _Dawa 
+
+@attribute [Authorize(Roles = "DawaView,admin,admin2")]
+
+<div style="border:solid;padding:20px; border-color:lightblue;border-radius:20px;margin-left:20px ;margin-right:20px; direction:rtl; align-content:end">
+    <EditForm OnValidSubmit="SaveData" Model="DawaData">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-2">
+            <div class="col" style="align-content:end">
+                <MudSelect @bind-Value="@DawaData.SelectDawa" Label="اختر مقيم الدعوى من فضلك"  Variant="Variant.Outlined">
+                    <MudSelectItem Value="@("من قبل الوزارة")"> من قبل الوزارة </MudSelectItem>
+                    <MudSelectItem Value="@("من قبل الغير")">من قبل الغير</MudSelectItem>
+                    <MudSelectItem Value="@("طرف ثالث")">طرف ثالث</MudSelectItem>
+                    <MudSelectItem Value="@("اخرى")">اخرى</MudSelectItem>
+
+                </MudSelect>
+                
+            </div>
+            <div class="col">
+                
+                <MudItem >
+                    <MudTextField  Label="رقم الدعوى" T="string" Variant="Variant.Outlined" @bind-Value="@DawaData.DawaNumber" />
+                </MudItem>
+            </div>
+            <div class="col">
+                <MudItem>
+                    <MudTextField Label="اسم المدعي" T="string" Variant="Variant.Outlined" @bind-Value="@DawaData.Name1" />
+                </MudItem>
+                
+            </div>
+            <div class="col">
+                <MudItem>
+                    <MudTextField Label="اسم المدعي عليه" T="string" Variant="Variant.Outlined" @bind-Value="@DawaData.Name2" />
+                </MudItem>
+
+            </div>
+
+        <br />
+        </div>
+        <br />
+
+        <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-2">
+            <div class="col">
+
+                <MudItem>
+                    <MudTextField Label="موضوع الدعوى" T="string" Variant="Variant.Outlined" @bind-Value="@DawaData.DawaSubject" />
+                </MudItem>
+            </div>
+
+            <div class="col">
+                <MudSelect @bind-Value="@DawaData.DawaType" Label="نوع الدعوى" Variant="Variant.Outlined">
+                    <MudSelectItem Value="@("مدني")" > مدني </MudSelectItem>
+                    <MudSelectItem Value="@("تجاري")">تجاري</MudSelectItem>
+                    <MudSelectItem Value="@("قضاء موظفين")">قضاء موظفين</MudSelectItem>
+                    <MudSelectItem Value="@("محكمة تحقيق")">محكمة تحقيق</MudSelectItem>
+
+                </MudSelect>
+    
+            </div>
+            <div class="col">
+                <MudSelect @bind-Value="@DawaData.Office" Label="اختر الدائرة" Variant="Variant.Outlined">
+                    <MudSelectItem Value="@("مركز الوزارة")"> مركز الوزارة </MudSelectItem>
+                    <MudSelectItem Value="@("الهيئة العامة للتشغيل والصيانة")">الهيئة العامة للتشغيل والصيانة</MudSelectItem>
+                    <MudSelectItem Value="@(" المياه الجوفية")">المياه الجوفية</MudSelectItem>
+                    <MudSelectItem Value="@("المصب العام")">المصب العام</MudSelectItem>
+
+                </MudSelect>
+            </div>
+            <div class="col">
+                <MudItem>
+                    <MudTextField Label="المحكمة المختصة" T="string" Variant="Variant.Outlined" @bind-Value="@DawaData.Court" />
+                </MudItem>
+            </div>
+
+        </div>
+
+        <br />
+        <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 row-cols-1">
+
+
+            <div class="col">
+                <MudItem>
+                    <MudTextField Label="رقم القرار البدائي" T="string" Variant="Variant.Outlined" @bind-Value="@DawaData.Decision1Num" />
+                </MudItem>
+            </div>
+            <div class="col">
+                <MudItem>
+                    <MudTextField Label="اخر الاجراءات" T="string" Variant="Variant.Outlined" @bind-Value="@DawaData.AkherALajraaat" />
+                </MudItem>
+            </div>
+            <div class="col">
+                <MudItem>
+                    <MudTextField Label="الملاحظات" T="string" Variant="Variant.Outlined" @bind-Value="@DawaData.Notes" />
+                </MudItem>
+            </div>
+        </div>
+        <br />
+        
+        <div>
+            <div class="col">
+                <label>صورة القرار البدائي</label>
+
+                <InputFile accept=".png,.jpg,.jpeg,.pdf" class="form-control" style="background-color:transparent" OnChange="CheckFile" />
+            </div>
+            
+        </div>
+
+        <div>
+            
+        </div>
+        <br />
+        <div class="row">
+            <div class="col">
+                <MudItem>
+                    <MudTextField Label="رقم قرار الاستئناف" T="int" Variant="Variant.Outlined" @bind-Value="@DawaData.AstanafNO" />
+                </MudItem>
+
+            </div>
+                    
+            <div class="col">
+                <MudItem>
+                    <MudTextField Label="رقم قرار التمييزي" T="int" Variant="Variant.Outlined" @bind-Value="@DawaData.TameezNO" />
+                </MudItem>
+
+            </div>
+            
+            <div class="col">
+                <MudItem>
+                    <MudTextField  Label="رقم قرار التصحيح" T="int" Variant="Variant.Outlined" @bind-Value="@DawaData.TashehNO" />
+                </MudItem>
+            </div>
+        </div>
+        <br />
+        <div class="col">
+            <MudItem>
+                <MudTextField ReadOnly Label="تاريخ التحديث" T="DateTime" Value="DateTime.Now" Variant="Variant.Outlined"/>
+            </MudItem>
+        </div>
+        <br />
+        <br />
+        <br />
+
+        <MudButton ButtonType="ButtonType.Submit" FullWidth Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Secondary" Size="Size.Large"><b>حفظ الدعوى</b></MudButton>
+
+        <br />
+        <br />
+    </EditForm>
+</div>
+
+@code{
+    public DaawaModel DawaData { get; set; } = new DaawaModel();
+
+    public InputFileChangeEventArgs UplaodedDawaImage { get; set; }
+    private async Task SaveData()
+    {
+        var UserResponse = await _js.InvokeAsync<bool>("confirm", "هل تود اضافة الدعوى الى النظام؟");
+        if (UserResponse)
+        {
+            var CheckUserExists = await _Dawa.CheckIfDawaExistsInDB(DawaData.DawaNumber);
+            if (CheckUserExists is true)
+            {
+                await _js.InvokeVoidAsync("alert", $"الدعوى : {DawaData.SelectDawa} موجودة في النظام مسبقاً");
+            }
+            else
+            {
+                DawaData.Decision1ImagePath = await UploadDawaImageToFileSystem();
+                var BackEndResponse = await _Dawa.AddNewDawaToTheSystem(DawaData);
+
+                await _js.InvokeVoidAsync("alert", BackEndResponse);
+                DawaData = new DaawaModel();
+
+            }
+        }
+    }
+    private async Task CheckFile(InputFileChangeEventArgs UploadedFile)
+    {
+
+        //.png,.jpg,.jpeg,.pdf
+        if (UploadedFile.File.ContentType == "image/png" || UploadedFile.File.ContentType == "image/jpeg"
+        || UploadedFile.File.ContentType == "image/pdf")
+        {
+            if (UploadedFile.File.Size > 2000000)
+            {
+                await _js.InvokeVoidAsync("alert", "يجب ان لا يزيد حجم الملف المرفق عن 5MB رجاءً");
+            }
+            else
+            {
+                await _js.InvokeVoidAsync("alert", "تم ارفاق الملف بنجاح");
+                UplaodedDawaImage = UploadedFile;
+            }
+
+        }
+        else
+        {
+            await _js.InvokeVoidAsync("alert", "نوع الملف غير مطابق");
+            return;
+        }
+    }
+    private async Task<string> UploadDawaImageToFileSystem()
+    {
+
+        var FileName = DawaData.SelectDawa + "_" + Guid.NewGuid().ToString() + $"{UplaodedDawaImage.File.Name}";
+        var FolderPath = $"{_env.WebRootPath}\\DawaImages";
+        var FullPath = Path.Combine(FolderPath, FileName);
+        var MemoryStream = new MemoryStream();
+        await UplaodedDawaImage.File.OpenReadStream(5000000).CopyToAsync(MemoryStream);
+
+
+        // FileMode : to give permission to the filestream to create files
+        await using (var fs = new FileStream(FullPath, FileMode.Create, FileAccess.Write))
+        {
+            MemoryStream.WriteTo(fs);
+        }
+
+        return $"DawaImages\\{FileName}";
+    }
+}

@@ -1,0 +1,74 @@
+﻿@page "/"
+@using MinistryOfWarerResources.Components
+@*Keyframes by https://animate.style/*@
+@*@attribute [Authorize(Roles = "DawaView,eatalaJazaea,admin,admin2")]
+*@<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+<style type="text/css">
+
+    .bounceIn {
+        opacity: 0;
+        animation-delay: 0.5s;
+        animation-duration: 0.5s;
+        animation-name: bounceIn;
+        animation-fill-mode: forwards;
+    }
+
+    .bounceOut {
+        animation-duration: 0.5s;
+        animation-name: bounceOut;
+        animation-fill-mode: forwards;
+    }
+
+    .backInDown {
+        opacity: 0;
+        animation-delay: 0.5s;
+        animation-duration: 0.5s;
+        animation-name: backInDown;
+        animation-fill-mode: forwards;
+    }
+
+    .backOutDown {
+        animation-duration: 0.5s;
+        animation-name: backOutDown;
+        animation-fill-mode: forwards;
+    }
+
+    .rotateIn {
+        opacity: 0;
+        animation-delay: 0.5s;
+        animation-duration: 0.5s;
+        animation-name: rotateIn;
+        animation-fill-mode: forwards;
+    }
+
+    .rotateOut {
+        animation-duration: 0.5s;
+        animation-name: rotateOut;
+        animation-fill-mode: forwards;
+    }
+</style>
+
+<MudCarousel Class="mud-width-full" Style="height:700px" TData="object" AutoCycle="true">
+    <MudCarouselItem Color="@Color.Transparent" Transition="Transition.Slide">
+        <div class="d-flex" style="height:100%">
+            <Index></Index>
+        </div>
+    </MudCarouselItem>
+    <MudCarouselItem Color="@Color.Transparent" Transition="Transition.Fade">
+        <div class="d-flex" style="height:100%">
+            <DawaJAZAEA></DawaJAZAEA>
+        </div>
+    </MudCarouselItem>
+    <MudCarouselItem Color="@Color.Tertiary" Transition="Transition.Custom" CustomTransitionEnter="bounceIn" CustomTransitionExit="bounceOut">
+        <div class="d-flex" style="height:100%">
+            <AllStaff></AllStaff>
+        </div>
+    </MudCarouselItem>
+    <MudCarouselItem Transition="Transition.Custom" CustomTransitionEnter="backInDown" CustomTransitionExit="backOutDown">
+        <div class="d-flex" style="background-color:lightgray; height:100%">
+            <JazaeaALL></JazaeaALL>
+        </div>
+    </MudCarouselItem>
+</MudCarousel>
+

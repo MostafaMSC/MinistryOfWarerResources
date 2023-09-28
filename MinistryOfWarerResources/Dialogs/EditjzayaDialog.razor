@@ -1,0 +1,220 @@
+﻿@using MinistryOfWarerResources.ViewModels;
+
+@inject IJSRuntime _js
+@inject IWebHostEnvironment _env
+@inject NavigationManager _navigationManager
+
+@inject IJazaea _jazae
+@inject ISnackbar _Sb
+
+<div style=" direction:rtl; border:solid;padding:20px; margin:20px;background-color:white;border-color:lightblue;border-radius:20px;">
+
+    <EditForm Model="JazaeaVM" OnValidSubmit="EditData">
+        <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-col-2 ">
+            <div class="col">
+                <MudSelect @bind-Value="@JazaeaVM.SelectDawa" Label="اختر مقيم الدعوى من فضلك" Variant="Variant.Outlined">
+                    <MudSelectItem Value="@("من قبل الوزارة")"> من قبل الوزارة </MudSelectItem>
+                    <MudSelectItem Value="@("من قبل الغير")">من قبل الغير</MudSelectItem>
+                    <MudSelectItem Value="@("طرف ثالث")">طرف ثالث</MudSelectItem>
+                    <MudSelectItem Value="@("اخرى")">اخرى</MudSelectItem>
+
+                </MudSelect>
+
+            </div>
+            <div class="col">
+
+                <MudItem>
+                    <MudTextField Label="رقم الدعوى" T="string" Variant="Variant.Outlined" @bind-Value="@JazaeaVM.DawaNumber" />
+                </MudItem>
+            </div>
+            <div class="col">
+                <MudItem>
+                    <MudTextField Label="اسم المشتكي" T="string" Variant="Variant.Outlined" @bind-Value="@JazaeaVM.Name1" />
+                </MudItem>
+
+            </div>
+            <div class="col">
+                <MudItem>
+                    <MudTextField Label="اسم المشتكي عليه" T="string" Variant="Variant.Outlined" @bind-Value="@JazaeaVM.Name2" />
+                </MudItem>
+
+            </div>
+
+        </div>
+
+        <br />
+        <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-2">
+
+            <div class="col">
+                <MudItem>
+                    <MudTextField Label="موضوع الدعوى" T="string" Variant="Variant.Outlined" @bind-Value="@JazaeaVM.DawaSubject" />
+                </MudItem>
+            </div>
+            <div class="col">
+                <MudSelect @bind-Value="@JazaeaVM.SelectDawa" Label="نوع الدعوى" Variant="Variant.Outlined">
+                    <MudSelectItem Value="@("مدني")"> مدني </MudSelectItem>
+                    <MudSelectItem Value="@("تجاري")">تجاري</MudSelectItem>
+                    <MudSelectItem Value="@("قضاء موظفين")">قضاء موظفين</MudSelectItem>
+                    <MudSelectItem Value="@("محكمة تحقيق")">محكمة تحقيق</MudSelectItem>
+
+                </MudSelect>
+
+            </div>
+            <div class="col">
+                <MudSelect @bind-Value="@JazaeaVM.Office" Label="اختر الدائرة" Variant="Variant.Outlined">
+                    <MudSelectItem Value="@("مركز الوزارة")"> مركز الوزارة </MudSelectItem>
+                    <MudSelectItem Value="@("الهيئة العامة للتشغيل والصيانة")">الهيئة العامة للتشغيل والصيانة</MudSelectItem>
+                    <MudSelectItem Value="@(" المياه الجوفية")">المياه الجوفية</MudSelectItem>
+                    <MudSelectItem Value="@("المصب العام")">المصب العام</MudSelectItem>
+
+                </MudSelect>
+            </div>
+            <div class="col">
+                <MudItem>
+                    <MudTextField Label="المحكمة المختصة" T="string" Variant="Variant.Outlined" @bind-Value="@JazaeaVM.Court" />
+                </MudItem>
+            </div>
+        </div>
+
+        <br />
+        <div class="row">
+
+            <div class="col">
+                <MudItem>
+                    <MudTextField Label="رقم القرار البدائي" T="string" Variant="Variant.Outlined" @bind-Value="@JazaeaVM.Decision1Num" />
+                </MudItem>
+            </div>
+            <div class="col">
+                <MudItem>
+                    <MudTextField Label="اخر الاجراءات" T="string" Variant="Variant.Outlined" @bind-Value="@JazaeaVM.AkherALajraaat" />
+                </MudItem>
+            </div>
+        </div>
+
+        <br />
+
+
+        <br />
+        <div>
+            <div class="col">
+                <MudItem>
+                    <MudTextField Label="الملاحظات" T="string" Variant="Variant.Outlined" @bind-Value="@JazaeaVM.Notes" />
+                </MudItem>
+            </div>
+        </div>
+        <br />
+
+        <div class="row row-cols-lg-2">
+            <div class="col">
+                <label>صورة القرار البدائي</label>
+
+                <InputFile accept=".png,.jpg,.jpeg,.pdf" class="form-control" OnChange="CheckFile" />
+            </div>
+            <div class="col" style="text-align:center">
+                <img style="height:80px; width:80px; border-radius:10%;" src="@JazaeaVM.Decision1ImagePath" alt="Decision1ImagePath" />
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col">
+                <MudItem>
+                    <MudTextField Label="رقم قرار الاستئناف" T="int" Variant="Variant.Outlined" @bind-Value="@JazaeaVM.AstanafNO" />
+                </MudItem>
+
+            </div>
+
+
+            <div class="col">
+                <MudItem>
+                    <MudTextField Label="رقم قرار التمييزي" T="int" Variant="Variant.Outlined" @bind-Value="@JazaeaVM.TameezNO" />
+                </MudItem>
+
+            </div>
+
+
+
+
+            <div class="col">
+                <MudItem>
+                    <MudTextField Label="رقم قرار التصحيح" T="int" Variant="Variant.Outlined" @bind-Value="@JazaeaVM.TashehNO" />
+                </MudItem>
+
+            </div>
+
+
+        </div>
+
+        <div class="col">
+            <MudItem>
+                <MudTextField ReadOnly Label="تاريخ التحديث" T="DateTime" Value="DateTime.Now" Variant="Variant.Outlined" />
+            </MudItem>
+
+        </div>
+
+
+
+        <br />
+        <MudButton ButtonType="ButtonType.Submit" @onclick='() => _navigationManager.NavigateTo("../jazaea")' FullWidth Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Success" Size="Size.Large">حفظ الدعوى </MudButton>
+    </EditForm>
+</div>
+
+@code {
+
+
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+
+    [Parameter]
+    public int Id { get; set; }
+    public InputFileChangeEventArgs UplaodedDawaImage { get; set; }
+
+    public JazaeaViewModel JazaeaVM { get; set; } = new JazaeaViewModel();
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        JazaeaVM = await _jazae.GetJazaeaViewModelByUserId(Id);
+    }
+
+
+    //private void FilterListOfDepts(int OfficeId)
+    //{
+    //    //ListOfFilterdDepts = ListOfAllDepts.Where(a => a.OfficeTableId == OfficeId).ToList();
+    //    EmployeeViewModel.OfficeId = OfficeId;
+    //}
+
+
+    private async Task EditData()
+    {
+        var Response = await _jazae.EditJazaeaViewModel(JazaeaVM);
+        _Sb.Add(Response, Severity.Info);
+    }
+
+    private async Task CheckFile(InputFileChangeEventArgs UploadedFile)
+    {
+
+        //.png,.jpg,.jpeg,.pdf
+        if (UploadedFile.File.ContentType == "image/png" || UploadedFile.File.ContentType == "image/jpeg"
+        || UploadedFile.File.ContentType == "image/pdf")
+        {
+            if (UploadedFile.File.Size > 2000000)
+            {
+                await _js.InvokeVoidAsync("alert", "يجب ان لا يزيد حجم الملف المرفق عن 5MB رجاءً");
+            }
+            else
+            {
+                await _js.InvokeVoidAsync("alert", "تم ارفاق الملف بنجاح");
+                UplaodedDawaImage = UploadedFile;
+            }
+
+        }
+        else
+        {
+            await _js.InvokeVoidAsync("alert", "نوع الملف غير مطابق");
+            return;
+        }
+    }
+
+}

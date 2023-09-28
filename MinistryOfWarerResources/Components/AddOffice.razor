@@ -1,0 +1,36 @@
+﻿@*@page "/AddNewOffice"
+
+@using MinistryOfWarerResources.BackEnd.Interfaces;
+@using MinistryOfWarerResources.Models;
+
+
+@inject IOffice _Office
+@inject IJSRuntime _js
+
+
+<form @onsubmit="AddNewOfficeToDb" Style="align-content:center; direction:rtl">
+    <MudItem >
+        <MudTextField Label="ادخل اسم الدائرة التي تود اضافتها" Variant="Variant.Outlined" @bind-Value="@NewOffice.OfficeName" />
+        <br />
+        <MudButton FullWidth ButtonType="ButtonType.Submit" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.AddBusiness" IconColor="Color.Secondary" Size="Size.Large">اضافة الدائرة</MudButton>
+
+    </MudItem>
+    
+    
+</form>
+
+
+<br />
+<AddDepts />
+
+
+@code{
+
+    public OfficeModel NewOffice { get; set; } = new OfficeModel();
+
+    private async Task AddNewOfficeToDb()
+    {
+        var MessageFromRepo = await _Office.AddNewOffice(NewOffice);
+        await _js.InvokeVoidAsync("alert", MessageFromRepo);
+    }
+}*@

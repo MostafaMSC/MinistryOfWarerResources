@@ -1,0 +1,145 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider  />
+<MudDialogProvider />
+<MudSnackbarProvider />
+<MudLayout  Style="direction:rtl; font-family:Verdana, Geneva, Tahoma, sans-serif">
+    <div class="page"  style="background-color:white" Square="true">
+        
+        <div class="sidebar" style="background-image:none;background-color:white">
+            <br />
+            <br />
+            <br />
+            <NavMenu />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            
+            <center>
+                <h6 style="color:cadetblue"><b>Ministery Of Water Resources   </b></h6>
+                <br />
+                <MudRating SelectedValue="2" Size="Size.Medium" />
+                <br />
+                <br />
+                <b style="color:cadetblue">Information Technology</b>
+                <br />
+                            
+            </center>
+
+        </div>
+        
+        <MudMainContent  Style="direction:rtl">
+            <br />
+            @Body
+        </MudMainContent>
+
+        <MudAppBar Elevation="0" Style=" background-color:cadetblue;  border-radius:10px; ">
+                   
+            <h2 style="text-shadow: 1px 6px #004D40; text-align:end"> <b>وزارة الموارد المائية</b></h2>
+            <h2 style="color:cadetblue">
+                _____________________
+            </h2>
+            <h2 style="text-shadow: 1px 6px #004D40; text-align:end"><b>نظام الدعاوى</b></h2>
+                
+            <MudSpacer />
+
+            <LoginDisplay></LoginDisplay>
+        </MudAppBar>
+    </div>
+    
+</MudLayout>
+
+
+
+
+
+@*@using MinistryOfWarerResources.Components
+@using MinistryOfWarerResources.Pages
+*@
+@*@inherits LayoutComponentBase
+<MudThemeProvider @bind-IsDarkMode="@ChangeTheme" />
+<MudDialogProvider />
+<MudSnackbarProvider />*@
+
+@*@inject ISnackbar Snackbar
+
+
+@code {
+    private void OnClick(MouseEventArgs args) => Snackbar.Add("OnClick Invoked");
+    private void OnTouch(TouchEventArgs args) => Snackbar.Add("OnTouch Invoked");
+}
+@code {
+    public bool ChangeTheme { get; set; }
+}
+<MudToggleIconButton @bind-Toggled="@ChangeTheme"
+                     Icon="@Icons.Material.Filled.DarkMode" Color="@Color.Error" Title="Off"
+                     ToggledIcon="@Icons.Material.Filled.LightMode" ToggledColor="@Color.Success" ToggledTitle="On" />
+<MudTabs Style="margin:40px;" Elevation="4" Rounded="true" Color="@Color.Primary" PrevIcon="@Icons.Material.Filled.SkipPrevious" NextIcon="@Icons.Material.Filled.SkipNext" PanelClass="pa-6">
+@*
+*@   @* <MudTabPanel >
+        <ChildContent>
+            <MudText><Index /></MudText>
+        </ChildContent>
+        <TabContent >
+            <b style="font-size:15px">اضافة ملف الدعاوى </b>
+        </TabContent>
+    </MudTabPanel>
+    <MudTabPanel>
+        <ChildContent>*@
+           @* <MudText><DawaJAZAEA/></MudText>
+        </ChildContent>
+        <TabContent>
+            <b style="font-size:15px">اضافة ملف الدعاوى الجزائية </b>
+        </TabContent>
+    </MudTabPanel>
+    <MudTabPanel>
+        <ChildContent>*@
+           @* <MudText><AllStaff /></MudText>
+        </ChildContent>
+        <TabContent>
+            <b style="font-size:15px">سجل الدعاوى</b>
+        </TabContent>
+    </MudTabPanel>
+    <MudTabPanel>
+        <ChildContent>
+            <MudText><JazaeaALL></JazaeaALL></MudText>
+        </ChildContent>
+        <TabContent>
+            <b style="font-size:15px">سجل الدعاوى الجزائية </b>
+        </TabContent>
+    </MudTabPanel>
+*@
+@*<MudTabPanel>
+    <ChildContent>
+        <MudText><AddOffice/></MudText>
+    </ChildContent>
+    <TabWrapperContent>
+        <MudTooltip Text="ToolTip Two">
+            @context
+        </MudTooltip>
+    </TabWrapperContent>
+    <TabContent>*@
+          @*  <MudText Typo="Typo.h6"><b style="font-size:15px"> ترميز  التشكيلات</b></MudText>
+    </TabContent>
+</MudTabPanel>
+<MudTabPanel>
+    <ChildContent>
+        <MudText></MudText>
+    </ChildContent>
+
+    <TabWrapperContent>
+        <MudTooltip Text="ToolTip Three">
+            @context
+        </MudTooltip>
+    </TabWrapperContent>
+</MudTabPanel>
+</MudTabs>*@

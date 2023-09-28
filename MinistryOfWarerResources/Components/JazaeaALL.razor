@@ -1,0 +1,156 @@
+﻿@page "/jazaea"
+
+@using System.Net.Http.Json
+@using MinistryOfWarerResources.BackEnd.Interfaces;
+@using MinistryOfWarerResources.Dialogs;
+@using MinistryOfWarerResources.Models;
+
+@inject IDialogService _Dialog
+@inject IJazaea _jazaea
+@inject IJSRuntime _js
+@inject ISnackbar _Sb
+@attribute [Authorize(Roles = "eatalaJazaea,admin,admin2")]
+
+
+    
+    <MudDataGrid HorizontalScrollbar="true" Striped="true" Elevation="18" Bordered="true" Style="background-color:ghostwhite; border:solid;padding:20px;border-color:lightblue;border-radius:20px;margin-left:20px ;margin-right:20px" T="JazaeaModule" MultiSelection="true" Items="@Elements" SortMode="SortMode.Multiple" Filterable="true" QuickFilter="@_quickFilter"
+                 Hideable="true" RowClick="@RowClicked" SelectedItemsChanged="@SelectedItemsChanged">
+        <ToolBarContent>
+            <MudText Typo="Typo.h5">جدول الدعاوى الجزائية</MudText>
+            <AuthorizeView Roles="admin, owner">
+                <Authorized>
+                    <MudButton @onclick="DeleteDawas" Variant="Variant.Filled" style="margin-right:40px" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error"><b>حذف</b></MudButton>
+
+                </Authorized>
+                <NotAuthorized>
+                    <h3> You Are Not Authorized</h3>
+                </NotAuthorized>
+            </AuthorizeView>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <Columns>
+            <SelectColumn T="JazaeaModule" />
+            <PropertyColumn Property="x => x.SelectDawa" Title="الدعوى" Sortable="true" Filterable="false" />
+            <PropertyColumn Property="x => x.DawaNumber" Title="رقم الدعوى" />
+            <PropertyColumn Property="x => x.DawaSubject" Title=" موضوع الدعوى" SortBy="@_sortBy" />
+            <PropertyColumn Property="x => x.Name1" Title="المشتكي" />
+            <PropertyColumn Property="x => x.Name2" Title="المشتكي عليه" />
+            <PropertyColumn Property="x => x.DawaSubject" Title="الموضوع" />
+            <PropertyColumn Property="x => x.Court" Title="المحكمة" />
+            <PropertyColumn Property="x => x.Office" Title="الدائرة" />
+            @*<PropertyColumn Property="x => x.AkherALajraaat" Title="اخر الاجراءات" />
+            <PropertyColumn Property="x => x.qraraadaNO" Title="رقم قرار الادعاء" />
+            <PropertyColumn Property="x => x.AstanafNO" Title="رقم قرار الاستئناف" />
+            <PropertyColumn Property="x => x.TameezNO" Title="رقم قرار التمييز" />*@
+            <TemplateColumn>
+                <CellTemplate>
+                    <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.EditNote" OnClick="(()=>StartedEditingItemFunction(context.Item))" />
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="JazaeaModule" />
+        </PagerContent>
+    </MudDataGrid>
+
+
+@code {
+    private IEnumerable<JazaeaModule> Elements = new List<JazaeaModule>();
+    private string _searchString;
+    private bool _sortNameByLength;
+    private List<string> _events = new();
+
+    public List<JazaeaModule> ListOfDeletedDawas { get; set; } = new List<JazaeaModule>();
+
+    // custom sort by name length
+    private Func<JazaeaModule, object> _sortBy => x =>
+    {
+        if (_sortNameByLength)
+            return x.SelectDawa.Length;
+        else
+            return x.SelectDawa;
+    };
+    // quick filter - filter gobally across multiple columns with the same input
+    private Func<JazaeaModule, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (x.SelectDawa.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        // if (x.DeptTable.OfficeTable.OfficeName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+        //     return true;
+
+        if ($"{x.DawaNumber} {x.LastUpdate.ToString()} {x.DawaSubject}".Contains(_searchString))
+            return true;
+
+        return false;
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        Elements = await _jazaea.GetAllDawas();
+    }
+
+    // events
+    void RowClicked(DataGridRowClickEventArgs<JazaeaModule> args)
+    {
+        _events.Insert(0, $"Event = RowClick, Index = {args.RowIndex}, Data = {System.Text.Json.JsonSerializer.Serialize(args.Item)}");
+    }
+
+    void SelectedItemsChanged(HashSet<JazaeaModule> items)
+    {
+        _events.Insert(0, $"Event = SelectedItemsChanged, Data = {System.Text.Json.JsonSerializer.Serialize(items)}");
+        ListOfDeletedDawas = items.ToList();
+
+    }
+
+
+    private async Task DeleteDawas()
+    {
+        var Response = await _js.InvokeAsync<bool>("confirm", "هل انت متاكد من الحذف");
+        if (Response)
+        {
+            var BackEndREsponse = await _jazaea.DeleteListOfDawas(ListOfDeletedDawas.Select(a => a.Id).ToList());
+            _Sb.Add(BackEndREsponse, Severity.Success);
+            Elements = await _jazaea.GetAllDawas();
+        }
+        else
+        {
+            return;
+        }
+
+    }
+    private async Task StartedEditingItemFunction(JazaeaModule item)
+    {
+
+        //_Nav.NavigateTo($"/EditEmp/{item.Id}");
+        var Parameters = new DialogParameters();
+        Parameters.Add("Id", item.Id);
+        var ModalOptions = new DialogOptions();
+        ModalOptions.MaxWidth = MaxWidth.Medium;
+        ModalOptions.FullWidth = true;
+        ModalOptions.CloseButton = true;
+        ModalOptions.CloseOnEscapeKey = true;
+        ModalOptions.Position = DialogPosition.Center;
+        ModalOptions.CloseOnEscapeKey = true;
+
+        
+
+
+        await _Dialog.ShowAsync<EditjzayaDialog>("تحديث الدعوى الجزائية", Parameters, ModalOptions);
+    }
+
+    void CanceledEditingItem(JazaeaModule item)
+    {
+    }
+
+    async Task CommittedItemChanges(JazaeaModule item)
+    {
+
+    }
+
+}
